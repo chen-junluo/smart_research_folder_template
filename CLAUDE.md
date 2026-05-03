@@ -1,0 +1,55 @@
+# CLAUDE.md
+- 这个 template folder 是一个 mini research workspace。
+- 最外层默认分成三块：
+  - `Archive/`：legacy materials。这里放原始长 `.Rmd`、旧 analysis scripts、旧 panel、旧 tables / figures、旧 writeup。
+  - `panel_factory/`：shared data pipeline。本体职责是从 raw / legacy sources 中重建 reusable data artifacts。
+  - `Projects/`：downstream research spaces。这里放 project-specific analysis、outputs、writeup。
+- 默认 reconstruction workflow
+  - 先 inventory `Archive/`。
+  - 判断哪些内容应沉淀为 `panel_factory/` 里的 reusable pipeline。
+  - 判断哪些内容属于具体 project，放进 `Projects/`。
+  - 不要一上来就把 archive 全量重写。先恢复 minimal runnable structure，再逐步解耦。
+- `panel_factory/` 的核心概念
+  - panel 的构建，不是把所有逻辑都堆在一个大表上反复改。
+  - panel 默认应理解为：在某个 `intermediate` base table 上，late merge 多个 compact features，最后形成 panel。
+  - 也就是说，核心结构是：`intermediate` + `features` -> `panel`。
+- 为什么要这样做
+  - 做解耦。base table、feature engineering、panel assembly 是不同层。
+  - 一个 `intermediate` 可以被多个 features 复用。
+  - 一个 feature set 也可以被多个 panels 或多个 projects 复用。
+  - 避免“每一步都 carry full table”的大表链式加工。
+  - 减少 project-specific logic 混入 shared pipeline。
+- `panel_factory/` 内部默认分工
+  - `data/`
+    - 存放 intermediate、compact features、final panels 等数据产物。
+    - raw-like source materials 如果需要保留，也应明确边界，不要随意覆写。
+  - `documents/`
+    - 存放 data dictionary、feature registry、panel version notes、dependency notes 等说明材料。
+  - `notebooks/`
+    - 用于 dashboard-style orchestration、检查中间产物、手动运行 pipeline。
+    - 不要默认把 notebooks 当作可废弃的临时文件。
+  - `src/`
+    - `features/`：生成 compact feature tables。
+    - `panels/`：把 feature late merge 到某个 intermediate 上，生成 final panel。
+    - `utils/`：shared utilities，例如 paths、registry、I/O helpers。
+- `src/` 下的默认设计原则
+  - 如果是 base 大表，命名应接近 `build_xxx_intermediate.py`。
+  - 如果是特征族，命名应接近 `build_xxx.py`。
+  - 如果是 panel，命名应接近 `build_xxx_panel.py`。
+  - 不要在 panel script 里重复生成已经可以独立生成的 feature。
+  - 不要为了加一个变量，就在 full panel 上一路 mutate 出更多中间表。
+  - 新变量如果能作为 compact feature 独立存在，就优先写成 feature builder。
+  - panel builder 的职责应尽量收敛到：读取某个 intermediate，merge 所需 features，输出 final panel。
+- `Projects/` 的默认边界
+  - `Projects/` 不是 shared pipeline。
+  - 这里放 project-specific regressions、tables、figures、writeup。
+  - 一个 data / panel 可能服务多个 projects，所以 `Projects/` 必须与 `panel_factory/` 分离。
+  - 如果某段逻辑将来应被多个 project 复用，优先考虑上移到 `panel_factory/`，而不是继续留在单个 project 里。
+- 与 archive 的关系
+  - `Archive/` 里的内容是 reconstruction source，不是 active workspace。
+  - 不要直接覆盖 legacy files。
+  - 如果 legacy workflow 是一个很长的 `.Rmd`，默认目标不是继续扩张这个 `.Rmd`，而是把可复用的数据构建逻辑拆回 `panel_factory/`，把 project-specific analysis 拆回 `Projects/`。
+- 协作风格
+  - 中文简洁描述内容，technical terms 用 English。
+  - 当结构不清晰时，先列 inventory，再提 reconstruction plan。
+  - 优先尊重已有 artifact names、merge keys、output boundaries，再逐步优化。

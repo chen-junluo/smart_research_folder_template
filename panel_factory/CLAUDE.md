@@ -1,0 +1,38 @@
+# panel_factory rules
+- 这个文件夹是 shared data pipeline，不是 project-specific analysis space。
+- 它的核心职责是：从 raw / legacy sources 中，稳定地重建 reusable intermediate、features、final panels。
+- 最重要的结构理解
+  - panel 不是一个一路被反复 mutate 的大表。
+  - panel 默认应理解为：在某个 `intermediate` base table 上，late merge 多个 compact features，最后形成 panel。
+  - 核心结构是：`intermediate` + `features` -> `panel`。
+- 为什么要这样做
+  - 做解耦。base table、feature engineering、panel assembly 是不同层。
+  - 一个 `intermediate` 可以被多个 features 复用。
+  - 一个 feature table 也可以被多个 panels 或多个 projects 复用。
+  - 避免“每一步都 carry full table”的大表链式加工。
+  - 减少 project-specific logic 混入 shared pipeline。
+- 默认边界
+  - `data/`：存放 intermediate、compact features、final panels。
+  - `documents/`：存放 data dictionary、feature registry、panel version notes、dependency notes。
+  - `notebooks/`：用于 dashboard-style orchestration、检查中间产物、手动运行 pipeline。
+  - `src/features/`：生成 compact feature tables。
+  - `src/panels/`：把 features late merge 到某个 intermediate 上，生成 final panel。
+  - `src/utils/`：shared utilities，例如 paths、registry、I/O helpers。
+- 默认工作原则
+  - 先尊重已有 artifact names、merge keys、output boundaries，再逐步优化。
+  - intermediate artifact names 在 first migration pass 中应视为 contract。
+  - raw-like source materials 默认只读，不要随意覆写。
+  - 不要为了“更整洁”而随意改动 staged output file names。
+- 写新代码时的默认判断
+  - 如果要加的是 reusable variable，先判断它是否应该成为一个独立 feature table。
+  - 如果某段逻辑只是某个 project 的临时分析需求，不要直接写进 `panel_factory/`。
+  - 如果当前目标只是组装一个 panel，不要顺手把 feature generation 也塞进 panel builder。
+  - 如果已有 intermediate 或 feature 已能支持当前任务，直接复用，不要重复造轮子。
+- `src/` 命名习惯
+  - intermediate builder：`build_xxx_intermediate.py`
+  - feature builder：`build_xxx.py`
+  - panel builder：`build_xxx_panel.py`
+- 协作风格
+  - 中文简洁描述内容，technical terms 用 English。
+  - 当结构不清晰时，先列当前 artifacts inventory，再提调整方案。
+  - 优先恢复 minimal runnable pipeline，再做抽象和优化。

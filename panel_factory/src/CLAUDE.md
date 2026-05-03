@@ -1,0 +1,21 @@
+# panel_factory/src rules
+- 不要重复实现前序步骤已经完成的处理逻辑。
+  - 如果当前变量的生成需要依赖 raw-like source、某些 intermediate 或 feature，而这些 intermediate 或 feature 已经可以由 `src/` 下现有脚本生成，则默认优先复用已有产物。
+  - 当前脚本应直接使用这些已有的 intermediate 或 feature 作为输入，不要在本文件中重复生成相同产物。
+- `src/` 的核心结构
+  - `features/`：生成 compact feature tables。
+  - `panels/`：把 features late merge 到某个 intermediate 上，生成 final panel。
+  - `utils/`：shared utilities。
+- panel 构建原则
+  - 不要在一个 full panel 上一路追加很多变量，再输出更大的 intermediate。
+  - 优先保持 `intermediate`、`features`、`panel` 三层解耦。
+  - panel builder 的职责应尽量收敛到：读取 intermediate、merge features、写出 panel。
+- 文件命名习惯
+  - intermediate：`build_xxx_intermediate.py`
+  - feature：`build_xxx.py`
+  - panel：`build_xxx_panel.py`
+- 每个 `build_*.py` 文件顶部默认应有简短 bullets，写清：
+  - 本文件生成什么 artifact
+  - 关键输入是什么
+  - grain 是什么
+  - merge keys 是什么

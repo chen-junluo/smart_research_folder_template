@@ -1,0 +1,22 @@
+# Projects-level rules
+- 这个文件夹用于承接 downstream research projects，不是 shared pipeline 本体。
+- 一个 data source、feature set 或 panel 可能服务多个 projects，所以 `Projects/` 与 `panel_factory/` 必须分离。
+- 默认 workflow
+  - 先读取 `../Archive/` 里的 legacy materials。
+  - 判断哪些内容应重建为 reusable pipeline logic，放回 `../panel_factory/`。
+  - 判断哪些内容属于 project-specific analysis、tables、figures、writeup，留在各 project folder 内。
+- 不要把 project-specific regressions、tables、figures 直接混入 `../panel_factory/src/`。
+- 不要直接覆盖 legacy files。优先从 archive 提炼出 structured、AI-friendly、可分块执行的 active scripts。
+- `project_template/` 代表单个研究项目的最小完整结构。
+- project 内部默认组织
+  - `dashboard/`：记录 todo 与 decisions。
+  - `analysis/`：active empirical analysis。
+    - stage folder 下的 `R/`、`Stata/` 放 analysis scripts。
+    - outputs 默认写到 sibling `outputs/`。
+  - `writeup/`：active manuscript materials。
+- 如果任务涉及 raw data、feature generation、panel construction、shared utilities，优先检查 `../panel_factory/`。
+- 如果任务涉及回归、表图、稳健性、论文写作，优先在对应 project folder 内处理。
+- 协作风格
+  - 中文简洁描述内容，technical terms 用 English。
+  - 先恢复 minimal runnable structure，再逐步扩展。
+  - 当结构不清晰时，先 inventory archive contents，再提 reconstruction plan。
