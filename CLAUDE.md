@@ -10,15 +10,15 @@
 ## 1. 项目文件夹和架构详细介绍
 
 - `panel_factory/` 的核心概念
-  - 主要的逻辑是读取raw data -> 生成feature tables -> 将featur tables 合并为最终panels。注意panel 的构建，不是把所有逻辑都堆在一个大表上反复改。具体来说，是在某个 `intermediate` base table 上（intermediate也是存放在features文件夹里im的），late merge 多个 compact features，最后形成 panel。
+  - 主要的逻辑是读取 raw data -> 生成 feature tables -> 将 feature tables 合并为最终 panels。注意 panel 的构建，不是把所有逻辑都堆在一个大表上反复改。更合适的方式是：在某个 `intermediate` base table 上，late merge 多个 compact features，最后形成 panel。
   - 内部文件架构如下：
     - `data/raw/`：原始数据，只读
     - `data/features/`：生成的 feature 表，以及部分重要 intermediate
     - `data/panels/`：最终 panel 数据
     - `src/features/`：feature 生成脚本
     - `src/panels/`：panel 聚合脚本
-    - `src/utils/`：shared utilities，例如 paths、registry、I/O helpers。
-    - `documents/`：维护了项目的重要文档。主要的目的是为了减少重复工作、方便复查。包括`features_registry.md`、`raw_data_dictionary.md`。如果在工作过程中发现值得沉淀来减少token消耗/提高效率的文档，与用户讨论分析是否要沉淀。沉淀的时候要1、确定好模板；2、修改好CLAUDE.md不要有项目内不一致的地方+确保正确prompting使得能AI正确refer达到复用效果。
+    - `src/utils/`：shared utilities，例如 `paths`、registry、I/O helpers。
+    - `documents/`：可选参考文档。作用是减少重复阅读、节省 token、方便复查。这里的内容不是必须层，也不是 rule source。规则与协作方式以 `CLAUDE.md` 为准；如果 `documents/` 与 `CLAUDE.md` 不一致，应优先修正或忽略 `documents/`。
     - `notebooks/`：用于 dashboard-style orchestration、供用户手动运行 pipeline，调用 `src/` 下的各类 Python 脚本。不要默认把 notebooks 当作一次性实验文件，也不要在未经说明的情况下把 notebook 工作流改写成别的交互方式。
 
 - `projects/`
@@ -40,10 +40,34 @@
 ## 2. 如果要进行reconstruction（数字化转型），workflow如下：
 
 - reconstruction workflow
-  - 原始项目的核心代码存放在 `Archive/`。代码可能会比较长，在这种情况下要步子迈小一点，确保代码identically相同先拆成符合panel_factory pipeline的样子。确保consistency。尤其注意各种merge和filter的操作，确保和原始项目一致。
-  - 判断哪些内容应沉淀为 `panel_factory/` 里的 reusable pipeline。
-  - 判断哪些内容属于具体 project，放进 `Projects/`。
-  - 不要一上来就把 archive 全量重写。先恢复 minimal runnable structure，再逐步解耦。
+  - 第一步：归档关键文件。
+    - 将关键项目文件放入 `Archive/`。
+    - 重点包括：生成代码的文件、分析类文件、相关文档、旧 panel、旧输出。
+    - 常见来源包括：又长又杂的 Python notebooks、旧 `.py`、旧 `.R` / `.do`、零散说明文档。
+  - 第二步：AI 预处理 + 用户确认。
+    - 先由 AI 读取 `Archive/` 中的关键文件，对项目尤其是 data logic 形成初步理解。
+    - AI 应先按 block 切分旧文件中的逻辑，而不是要求用户手动从头拆解。
+    - 然后进入用户确认环节：由用户标记或确认哪些 block 属于 `raw -> intermediate`，哪些属于 reusable `feature`，哪些属于 final `panel`。
+    - 这一步的核心难点是：旧项目常常通过“在旧表后增加 columns 形成新表”的方式演化，导致 intermediate files 冗余严重。
+    - 因此需要在交互中形成共识：
+      - 哪些部分应保留为 base `intermediate`。
+      - 哪些变量应拆成独立 `feature`。
+      - 最终 panel 应如何由 `intermediate + features` 组装而成。
+  - 第三步：产出执行文件与任务分派。
+    - 在完成 block-level 判断后，产出一个可供后续 AI 执行的文件。
+    - 根据工作量与复杂度，将任务适当拆成多个 blocks。
+    - 再把这些 blocks 拆成 `N` 个执行文件，便于分派给下游 AI 并行处理。
+  - 第四步：结果验收与一致性保证。
+    - 需要设置专门的验收 block。
+    - 如果验收发现问题，应继续修正，而不是直接交付。
+    - 最终目标是确保 consistency：最终生成的 panel 与 `Archive/` 中原始项目逻辑一致，尤其要核对 merge、filter、样本边界、关键变量定义。
+  - 第五步：代码重构与自动化。
+    - 在数据 construction 稳定后，再整理 analysis 部分的代码。
+    - 目标是参照 templates 重构现有 analysis code，使其更适合后续通过自然语言生成、修改、运行与读取结果。
+  - 默认原则
+    - 不要一上来就把 `Archive/` 全量重写。
+    - 先恢复 minimal runnable structure，再逐步解耦。
+    - 第一优先级是与原始项目保持一致，而不是先做抽象上的优雅重构。
 
 
 

@@ -11,15 +11,15 @@ Working rules:
 - 它的核心职责是：从 raw 中，稳定地重建 reusable intermediate、features、final panels。代码的来源请听从用户指示，可以用Archive里面重建，也可以根据自然语言指令。
 
 - `panel_factory/` 的核心概念
-  - 主要的逻辑是读取raw data -> 生成feature tables -> 将featur tables 合并为最终panels。注意panel 的构建，不是把所有逻辑都堆在一个大表上反复改。具体来说，是在某个 `intermediate` base table 上（intermediate也是存放在features文件夹里im的），late merge 多个 compact features，最后形成 panel。
+  - 主要的逻辑是读取 raw data -> 生成 feature tables -> 将 feature tables 合并为最终 panels。注意 panel 的构建，不是把所有逻辑都堆在一个大表上反复改。更合适的方式是：在某个 `intermediate` base table 上，late merge 多个 compact features，最后形成 panel。
   - 内部文件架构如下：
     - `data/raw/`：原始数据，只读
     - `data/features/`：生成的 feature 表，以及部分重要 intermediate
     - `data/panels/`：最终 panel 数据
     - `src/features/`：feature 生成脚本
     - `src/panels/`：panel 聚合脚本
-    - `src/utils/`：shared utilities，例如 paths、registry、I/O helpers。
-    - `documents/`：维护了项目的重要文档。主要的目的是为了减少重复工作、方便复查。包括`features_registry.md`、`raw_data_dictionary.md`。如果在工作过程中发现值得沉淀来减少token消耗/提高效率的文档，与用户讨论分析是否要沉淀。沉淀的时候要1、确定好模板；2、修改好CLAUDE.md不要有项目内不一致的地方+确保正确prompting使得能AI正确refer达到复用效果。
+    - `src/utils/`：shared utilities，例如 `paths`、registry、I/O helpers。
+    - `documents/`：可选参考文档。作用是减少重复阅读、节省 token、方便复查。这里的内容不是必须层，也不是 rule source。规则与协作方式以 `CLAUDE.md` 为准；如果 `documents/` 与 `CLAUDE.md` 不一致，应优先修正或忽略 `documents/`。
     - `notebooks/`：用于 dashboard-style orchestration、供用户手动运行 pipeline，调用 `src/` 下的各类 Python 脚本。不要默认把 notebooks 当作一次性实验文件，也不要在未经说明的情况下把 notebook 工作流改写成别的交互方式。
 
 - 写新代码时的默认判断
