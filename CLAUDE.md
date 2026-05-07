@@ -79,7 +79,7 @@
 - 使用步骤：
   ```bash
   # 首次设置（如果还没有 upstream remote）
-  git remote add upstream https://github.com/原作者/smart_research_folder_template.git
+  git remote add upstream https://github.com/chen-junluo/smart_research_folder_template.git
 
   # 同步更新
   ./scripts/sync-claude-md.sh
