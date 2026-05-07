@@ -7,3 +7,6 @@ Thumbs.db
 .claude/
 __pycache__/
 *.pyc
+
+# Test artifacts
+scripts/test_sync/

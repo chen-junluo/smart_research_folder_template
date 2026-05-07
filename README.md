@@ -66,6 +66,49 @@ smart_research_folder_template/
 4. Keep regressions, tables, figures, and manuscript work inside `Projects/`.
 5. Expand gradually from a minimal runnable structure.
 
+## Keeping your fork up to date
+
+If you fork this template, you can sync upstream `CLAUDE.md` updates while preserving your custom rules.
+
+### First-time setup
+
+```bash
+# Add upstream remote
+git remote add upstream https://github.com/your-username/smart_research_folder_template.git
+```
+
+### Sync CLAUDE.md files
+
+```bash
+# Pull latest upstream rules
+./scripts/sync-claude-md.sh
+
+# Review changes
+git diff
+
+# Commit if satisfied
+git add .
+git commit -m "Sync CLAUDE.md from upstream"
+```
+
+### How it works
+
+Each `CLAUDE.md` has two sections:
+- **Before** `## User-Specific Rules`: upstream rules (will be updated)
+- **After** `## User-Specific Rules`: your custom rules (preserved)
+
+Add your project-specific rules below the marker:
+
+```markdown
+## User-Specific Rules
+
+- Use `polars` instead of `pandas`
+- All regressions use `fixest` package
+- Output figures to `output/figures/`
+```
+
+See [`scripts/README.md`](scripts/README.md) for details.
+
 ## Short prompt use case
 Use this template when you want Claude to reconstruct a legacy research workflow into the Smart Research Folder structure.
 

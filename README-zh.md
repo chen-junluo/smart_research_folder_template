@@ -64,7 +64,50 @@ smart_research_folder_template/
 2. inventory 哪些内容应该沉淀成 reusable pipeline logic。
 3. 在 `panel_factory/` 里重建 shared data construction。
 4. 把 regressions、tables、figures、manuscript work 留在 `Projects/`。
-5. 从 minimal runnable structure 开始，逐步扩展。
+5. 从 minimal runnable structure 开始,逐步扩展。
+
+## 保持 fork 同步
+
+如果你 fork 了这个 template，可以同步上游的 `CLAUDE.md` 更新，同时保留你自己的规则。
+
+### 首次设置
+
+```bash
+# 添加 upstream remote
+git remote add upstream https://github.com/your-username/smart_research_folder_template.git
+```
+
+### 同步 CLAUDE.md 文件
+
+```bash
+# 拉取最新的 upstream 规则
+./scripts/sync-claude-md.sh
+
+# 检查变更
+git diff
+
+# 如果满意就提交
+git add .
+git commit -m "Sync CLAUDE.md from upstream"
+```
+
+### 工作原理
+
+每个 `CLAUDE.md` 分为两部分：
+- `## User-Specific Rules` **之前**：upstream 规则（会被更新）
+- `## User-Specific Rules` **之后**：你的自定义规则（会被保留）
+
+在 marker 下方添加你的项目特定规则：
+
+```markdown
+## User-Specific Rules
+
+- 用 `polars` 而不是 `pandas`
+- 所有回归用 `fixest` 包
+- 图表输出到 `output/figures/`
+```
+
+详见 [`scripts/README.md`](scripts/README.md)。
 
 ## 简短 prompt use case
 当你希望 Claude 把一个 legacy research workflow 重构成当前这个 Smart Research Folder 结构时，可以直接用下面这个模板。
