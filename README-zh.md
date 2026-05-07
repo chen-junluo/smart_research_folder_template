@@ -43,10 +43,20 @@ smart_research_folder_template/
 │       ├── panels/
 │       └── utils/
 └── Projects/
-    └── project_template/
-        ├── analysis/
-        ├── dashboard/
-        └── writeup/
+    └── project_template_IT_investment/
+        ├── 202405 ICIS/
+        │   ├── analysis/
+        │   │   ├── R/
+        │   │   ├── Stata/
+        │   │   ├── finalize/
+        │   │   └── outputs/
+        │   └── writeup/
+        │       ├── IT Investment - 202405 ICIS - WriteUp.md
+        │       └── submitted version/
+        ├── 202501 MISQ/
+        ├── 202506 ISR/
+        ├── 202601 AMJ/
+        └── dashboard/
 ```
 
 ## 使用方式
@@ -56,6 +66,30 @@ smart_research_folder_template/
 4. 把 regressions、tables、figures、manuscript work 留在 `Projects/`。
 5. 从 minimal runnable structure 开始，逐步扩展。
 
+## 简短 prompt use case
+当你希望 Claude 把一个 legacy research workflow 重构成当前这个 Smart Research Folder 结构时，可以直接用下面这个模板。
+
+模板：
+
+```text
+请先阅读这些文件：
+- `CLAUDE.md`：workspace-level 的任务路由和边界
+- `Archive/CLAUDE.md`：数字化转型 / reconstruction workflow
+- `panel_factory/CLAUDE.md`：shared pipeline 规则
+- `panel_factory/documents/naming_conventions.md`：builders、artifacts、variables 的命名规则
+- `Projects/CLAUDE.md`：downstream project 规则
+
+最后，帮我进行数字化转型，转型成符合当前这个 Smart Research Folder 的运作模式。
+```
+
+这些文件分别是什么：
+
+- `CLAUDE.md`：告诉 Claude 整个 workspace 里 `Archive/`、`panel_factory/`、`Projects/` 分别负责什么
+- `Archive/CLAUDE.md`：告诉 Claude 遇到数字化转型、reconstruction、legacy workflow 拆解时该怎么做
+- `panel_factory/CLAUDE.md`：告诉 Claude 怎样重建 reusable `intermediate`、`feature`、`panel`
+- `panel_factory/documents/naming_conventions.md`：承接已经沉淀到 `documents/` 里的命名规则
+- `Projects/CLAUDE.md`：告诉 Claude downstream analysis 和 writeup 应该如何与 shared pipeline 分离
+
 ## 当前自带的 placeholder
 这个 template 目前带了几类最小占位文件：
 
@@ -63,8 +97,8 @@ smart_research_folder_template/
 - `panel_factory/src/features/build_example_feature.py`
 - `panel_factory/src/panels/build_example_panel.py`
 - `panel_factory/src/utils/paths.py`
-- `Projects/project_template/dashboard/todo.md`
-- `Projects/project_template/dashboard/decisions.md`
+- `Projects/project_template_IT_investment/dashboard/todo.md`
+- `Projects/project_template_IT_investment/dashboard/decisions.md`
 
 这些文件故意保持极简。它们的作用是给真实研究项目提供一个可改造的起点。
 

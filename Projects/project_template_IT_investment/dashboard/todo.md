@@ -1,0 +1,6 @@
+- project: `IT Investment`
+- project type: `Template Project`
+- current stage
+- current goal
+- next steps
+- blocked

@@ -43,10 +43,20 @@ smart_research_folder_template/
 │       ├── panels/
 │       └── utils/
 └── Projects/
-    └── project_template/
-        ├── analysis/
-        ├── dashboard/
-        └── writeup/
+    └── project_template_IT_investment/
+        ├── 202405 ICIS/
+        │   ├── analysis/
+        │   │   ├── R/
+        │   │   ├── Stata/
+        │   │   ├── finalize/
+        │   │   └── outputs/
+        │   └── writeup/
+        │       ├── IT Investment - 202405 ICIS - WriteUp.md
+        │       └── submitted version/
+        ├── 202501 MISQ/
+        ├── 202506 ISR/
+        ├── 202601 AMJ/
+        └── dashboard/
 ```
 
 ## How to use
@@ -56,6 +66,30 @@ smart_research_folder_template/
 4. Keep regressions, tables, figures, and manuscript work inside `Projects/`.
 5. Expand gradually from a minimal runnable structure.
 
+## Short prompt use case
+Use this template when you want Claude to reconstruct a legacy research workflow into the Smart Research Folder structure.
+
+Template:
+
+```text
+Please read these files first:
+- `CLAUDE.md`: workspace-level routing and boundaries
+- `Archive/CLAUDE.md`: digital transformation / reconstruction workflow for legacy materials
+- `panel_factory/CLAUDE.md`: shared pipeline rules
+- `panel_factory/documents/naming_conventions.md`: naming rules for builders, artifacts, and variables
+- `Projects/CLAUDE.md`: downstream project rules
+
+Then help me with digital transformation and convert this project into the current Smart Research Folder operating model.
+```
+
+What each file does:
+
+- `CLAUDE.md`: tells Claude how to route work across `Archive/`, `panel_factory/`, and `Projects/`
+- `Archive/CLAUDE.md`: tells Claude how to handle digital transformation, reconstruction, and legacy workflow decomposition
+- `panel_factory/CLAUDE.md`: tells Claude how to rebuild reusable intermediates, features, and panels
+- `panel_factory/documents/naming_conventions.md`: gives stable naming rules already moved into `documents/`
+- `Projects/CLAUDE.md`: tells Claude how downstream analysis and writeup work should stay separated from the shared pipeline
+
 ## Included placeholders
 This template includes lightweight placeholders for:
 
@@ -63,8 +97,8 @@ This template includes lightweight placeholders for:
 - `panel_factory/src/features/build_example_feature.py`
 - `panel_factory/src/panels/build_example_panel.py`
 - `panel_factory/src/utils/paths.py`
-- `Projects/project_template/dashboard/todo.md`
-- `Projects/project_template/dashboard/decisions.md`
+- `Projects/project_template_IT_investment/dashboard/todo.md`
+- `Projects/project_template_IT_investment/dashboard/decisions.md`
 
 These files are intentionally minimal. They are starting points for adapting the structure to a real research project.
 

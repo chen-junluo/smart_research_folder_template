@@ -1,0 +1,8 @@
+- project: `IT Investment`
+- project type: `Template Project`
+- scope
+- stage selection
+- data
+- variables
+- regression
+- writeup
