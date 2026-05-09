@@ -10,7 +10,8 @@
   - 不要删除中英夹杂的现有注释
   - 这类注释通常包含 `context`、研究过程信息或 `domain knowledge`
   - 如果代码改动改变了这些注释的含义，应更新内容，而不是直接删掉
-
+- 我看重 canonical source clarity
+  - 优先复用上游有的变量，避免重复 alias，避免 downstream 误读和缺失值污染
 
 ---
 ## 1. `src/` 的核心结构
@@ -51,6 +52,7 @@
 - 不要为了加一个变量，就在 full panel 上一路 mutate 出更多中间表
 - 新变量如果能作为 compact feature 独立存在，就优先写成 feature builder
 - panel builder 的职责应尽量收敛到：读取某个 intermediate，merge 所需 features，输出 final panel
+- 对于非生成feature的，简单的查询检索的任务，直接后台撰写代码然后告诉我结果。**如无要求，不要在本地写入py文件和报告！**
 
 ---
 ## 6. 每次生成新 feature 后，默认反馈该 feature 的 descriptive statistics
