@@ -21,7 +21,7 @@
   - `panel` outputs：放在 `data/panels/`，文件名应直接对应最终 panel 名称。
 - naming defaults
   - 优先延续已有 `artifact names`、`merge keys`、`output boundaries`。
-  - 第一轮 migration 不要为了整洁随意重命名。
+  - 如果是 migration 不要为了整洁/体现grain随意重命名。
   - 如果重命名会影响下游 consumer，必须联动更新。
 
 ---
